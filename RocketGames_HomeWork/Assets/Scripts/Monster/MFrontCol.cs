@@ -6,6 +6,7 @@ using UnityEngine.Assertions.Must;
 public class MFrontCol : MonoBehaviour
 {
     [SerializeField] MonsterState _monsterState;
+    [SerializeField] MDownCol _dC;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -13,9 +14,13 @@ public class MFrontCol : MonoBehaviour
         {
             _monsterState.TransitionTo(MState.ATTACK);
         }
-        else if (collision.CompareTag("Zombie"))
+        else if (collision.CompareTag("Zombie") && _dC._jump && collision.GetComponent<MonsterState>()._CurState != MState.JUMP)
         {
             _monsterState.TransitionTo(MState.JUMP);
+        }
+        else if (!_dC._jump)
+        {
+            _monsterState.TransitionTo(MState.WALK);
         }
     }
 
