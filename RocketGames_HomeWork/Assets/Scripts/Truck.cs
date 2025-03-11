@@ -11,12 +11,29 @@ public class Truck : MonoBehaviour
     [SerializeField] WheelJoint2D _wheelBack;
     JointMotor2D _jMotor;
 
+    Rigidbody2D _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        GameManager._inst._GameStart += () => Go();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        Vector2 vel = _rb.velocity;
+        if(vel.x < 0)
         {
-            Go();
+            _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+        else
+        {
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
     }
 

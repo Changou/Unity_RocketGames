@@ -5,11 +5,6 @@ using UnityEngine;
 public class MWalkState : StateBase
 {
 
-    private void Awake()
-    {
-
-    }
-
     public override void Enter()
     {
 
@@ -20,6 +15,6 @@ public class MWalkState : StateBase
     }
     public override void UpdateState()
     {
-
+        _rb.AddForce(Vector2.left * _monster._Speed, ForceMode2D.Force);
     }
 }

@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class MAttackState : StateBase
 {
-    Animator _anim;
-
-    private void Awake()
-    {
-        _anim = GetComponent<Animator>();
-    }
 
     public override void Enter()
     {
@@ -22,5 +16,17 @@ public class MAttackState : StateBase
     public override void UpdateState()
     {
         
+    }
+
+    public void OnAttack()
+    {
+        if (_monster._detectionObj != null)
+        {
+            Box box = _monster._detectionObj.GetComponent<Box>();
+            if (box != null)
+            {
+                box.OnDamage(_monster._Atk);
+            }
+        }
     }
 }

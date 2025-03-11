@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class MJumpState : StateBase
 {
-    Rigidbody2D _rb;
-
-    [SerializeField] float _power;
-
-    private void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-    }
 
     public override void Enter()
     {
@@ -23,6 +15,6 @@ public class MJumpState : StateBase
     }
     public override void UpdateState()
     {
-        _rb.AddForce(Vector2.up * _power);
+        _rb.AddForce(Vector2.up * _monster._JPower);
     }
 }

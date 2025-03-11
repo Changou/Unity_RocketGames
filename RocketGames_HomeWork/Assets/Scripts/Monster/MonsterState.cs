@@ -14,6 +14,17 @@ public abstract class StateBase : MonoBehaviour
 {
     public MState _mState;
 
+    protected Monster _monster;
+    protected Rigidbody2D _rb;
+    protected Animator _anim;
+
+    void Awake()
+    {
+        _monster = GetComponent<Monster>();
+        _rb = GetComponent<Rigidbody2D>();
+        _anim = GetComponent<Animator>();
+    }
+
     public abstract void Enter();
     public abstract void Exit();
     public abstract void UpdateState();

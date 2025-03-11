@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    [SerializeField] MonsterState _mState;
-    [SerializeField] float _speed;
-    [SerializeField] float _backPower;
-    Rigidbody2D _rb;
+    [Header("체력"), SerializeField] int _defalutHp;
 
-    [SerializeField] bool _isUp = false;
+    [SerializeField] MonsterState _mState;
+    [Header("점프파워"), SerializeField] float _jPower;
+    [Header("속도"), SerializeField] float _speed;
+    [Header("공격력"), SerializeField] float _atk;
+    [Header("백무빙"), SerializeField] float _backPower;
+    [Header("감지된 오브젝트"), SerializeField] public GameObject _detectionObj;
+
+    [SerializeField] SpriteRenderer _sprite;
+
+    Rigidbody2D _rb;
 
     [SerializeField] float _maxVelX;
     [SerializeField] float _maxVelY;
+
+    public float _JPower => _jPower;
+    public float _Speed => _speed;
+    public float _Atk => _atk;
+
+    int _hp;
+
+    private void OnEnable()
+    {
+        _hp = _defalutHp;
+    }
 
     void Start()
     {
@@ -24,19 +41,10 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_mState._CurState == MState.ATTACK && !_isUp) return;
-
-        Walk();
-
         Vector2 vel = _rb.velocity;
         vel.x = Mathf.Clamp(vel.x, -_maxVelX, _maxVelX);
         vel.y = Mathf.Clamp(vel.y, -_maxVelY, _maxVelY);
         _rb.velocity = vel;
-    }
-
-    void Walk()
-    {
-        _rb.AddForce(Vector2.left * _speed, ForceMode2D.Force);
     }
 
     public void BackMove()
@@ -44,24 +52,27 @@ public class Monster : MonoBehaviour
         _rb.AddForce(Vector2.right * _backPower, ForceMode2D.Impulse);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void OnDamage(int dmg)
     {
-        if (collision.gameObject.CompareTag("Load"))
+        _hp -= dmg;
+        if(_hp <= 0)
         {
-            _isUp = false;
+            Die();
         }
+        else
+            StartCoroutine("DamageEffect");
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    IEnumerator DamageEffect()
     {
-        if (collision.gameObject.CompareTag("Load"))
-        {
-            _isUp = true;
-        }
+        _sprite.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        _sprite.color = Color.white;
     }
 
-    public void OnAttack()
+    void Die()
     {
-
+        _sprite.color = Color.white;
+        PoolManager.ReturnMonster(this);
     }
 }
